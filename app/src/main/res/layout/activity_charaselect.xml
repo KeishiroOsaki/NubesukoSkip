@@ -1,0 +1,102 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.example.oosakikeishiro.nubesukoskip.charaselect">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal">
+
+        <TextView android:text="@string/charaerande" android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="142dp"
+            android:id="@+id/textView2"
+            android:layout_below="@+id/gridLayout"
+            android:layout_alignRight="@+id/gridLayout"
+            android:layout_alignEnd="@+id/gridLayout"
+            android:gravity="center_horizontal" />
+
+        <GridLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/gridLayout"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+
+            <ImageButton
+                android:layout_width="110dp"
+                android:layout_height="139dp"
+                android:id="@+id/imageButton"
+                android:layout_row="3"
+                android:layout_column="3"
+                android:layout_weight="0.14"
+                android:focusable="false"
+                android:src="@drawable/player01"
+                android:scaleType="fitCenter" />
+
+            <ImageButton
+                android:layout_width="110dp"
+                android:layout_height="139dp"
+                android:id="@+id/imageButton2"
+                android:layout_row="3"
+                android:layout_column="4"
+                android:layout_weight="0.14"
+                android:focusable="false"
+                android:src="@drawable/player02"
+                android:scaleType="fitCenter" />
+
+            <ImageButton
+                android:layout_width="110dp"
+                android:layout_height="139dp"
+                android:id="@+id/imageButton3"
+                android:layout_row="3"
+                android:layout_column="5"
+                android:layout_weight="0.14"
+                android:focusable="false"
+                android:src="@drawable/player04"
+                android:scaleType="fitCenter" />
+
+            <ImageButton
+                android:layout_width="110dp"
+                android:layout_height="139dp"
+                android:id="@+id/imageButton4"
+                android:layout_row="4"
+                android:layout_column="3"
+                android:layout_weight="0.14"
+                android:focusable="false"
+                android:src="@drawable/player05"
+                android:scaleType="fitCenter" />
+
+            <ImageButton
+                android:layout_width="110dp"
+                android:layout_height="139dp"
+                android:id="@+id/imageButton6"
+                android:layout_row="4"
+                android:layout_column="4"
+                android:layout_weight="0.14"
+                android:focusable="false"
+                android:src="@drawable/player07"
+                android:scaleType="fitCenter" />
+
+            <ImageButton
+                android:layout_width="110dp"
+                android:layout_height="139dp"
+                android:id="@+id/imageButton5"
+                android:layout_row="4"
+                android:layout_column="5"
+                android:layout_weight="0.14"
+                android:focusable="false"
+                android:src="@drawable/player06"
+                android:scaleType="fitCenter" />
+
+        </GridLayout>
+    </LinearLayout>
+
+</RelativeLayout>

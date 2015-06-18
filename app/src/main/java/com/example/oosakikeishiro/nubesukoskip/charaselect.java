@@ -1,8 +1,8 @@
 package com.example.oosakikeishiro.nubesukoskip;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -56,11 +56,27 @@ public class charaselect extends ActionBarActivity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
+        Intent intent = new Intent(this, GameActivity.class);
         switch (v.getId()) {
-            default:
-                Intent intent = new Intent(this, game.class);
-                startActivity(intent);
+            case R.id.b_chr1:
+                intent.putExtra("src", "01");
+                break;
+            case R.id.b_chr2:
+                intent.putExtra("src", "02");
+                break;
+            case R.id.b_chr4:
+                intent.putExtra("src", "04");
+                break;
+            case R.id.b_chr5:
+                intent.putExtra("src", "05");
+                break;
+            case R.id.b_chr7:
+                intent.putExtra("src", "07");
+                break;
+            case R.id.b_chr6:
+                intent.putExtra("src", "06");
                 break;
         }
+        startActivity(intent);
     }
 }

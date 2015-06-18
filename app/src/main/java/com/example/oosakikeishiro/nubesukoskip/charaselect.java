@@ -1,17 +1,35 @@
 package com.example.oosakikeishiro.nubesukoskip;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 
 
-public class charaselect extends ActionBarActivity {
+@SuppressWarnings("ALL")
+public class charaselect extends ActionBarActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_charaselect);
+
+        //ボタンリスナーを登録
+        ImageButton b_chr1 = (ImageButton)findViewById(R.id.b_chr1);
+        ImageButton b_chr2 = (ImageButton)findViewById(R.id.b_chr2);
+        ImageButton b_chr4 = (ImageButton)findViewById(R.id.b_chr4);
+        ImageButton b_chr5 = (ImageButton)findViewById(R.id.b_chr5);
+        ImageButton b_chr7 = (ImageButton)findViewById(R.id.b_chr7);
+        ImageButton b_chr6 = (ImageButton)findViewById(R.id.b_chr6);
+        b_chr1.setOnClickListener(this);
+        b_chr2.setOnClickListener(this);
+        b_chr4.setOnClickListener(this);
+        b_chr5.setOnClickListener(this);
+        b_chr7.setOnClickListener(this);
+        b_chr6.setOnClickListener(this);
     }
 
     @Override
@@ -34,5 +52,15 @@ public class charaselect extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            default:
+                Intent intent = new Intent(this, game.class);
+                startActivity(intent);
+                break;
+        }
     }
 }

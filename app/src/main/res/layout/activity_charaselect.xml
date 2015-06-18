@@ -36,7 +36,7 @@
             <ImageButton
                 android:layout_width="110dp"
                 android:layout_height="139dp"
-                android:id="@+id/imageButton"
+                android:id="@+id/b_chr1"
                 android:layout_row="3"
                 android:layout_column="3"
                 android:layout_weight="0.14"
@@ -47,7 +47,7 @@
             <ImageButton
                 android:layout_width="110dp"
                 android:layout_height="139dp"
-                android:id="@+id/imageButton2"
+                android:id="@+id/b_chr2"
                 android:layout_row="3"
                 android:layout_column="4"
                 android:layout_weight="0.14"
@@ -58,7 +58,7 @@
             <ImageButton
                 android:layout_width="110dp"
                 android:layout_height="139dp"
-                android:id="@+id/imageButton3"
+                android:id="@+id/b_chr4"
                 android:layout_row="3"
                 android:layout_column="5"
                 android:layout_weight="0.14"
@@ -69,7 +69,7 @@
             <ImageButton
                 android:layout_width="110dp"
                 android:layout_height="139dp"
-                android:id="@+id/imageButton4"
+                android:id="@+id/b_chr5"
                 android:layout_row="4"
                 android:layout_column="3"
                 android:layout_weight="0.14"
@@ -80,7 +80,7 @@
             <ImageButton
                 android:layout_width="110dp"
                 android:layout_height="139dp"
-                android:id="@+id/imageButton6"
+                android:id="@+id/b_chr7"
                 android:layout_row="4"
                 android:layout_column="4"
                 android:layout_weight="0.14"
@@ -91,7 +91,7 @@
             <ImageButton
                 android:layout_width="110dp"
                 android:layout_height="139dp"
-                android:id="@+id/imageButton5"
+                android:id="@+id/b_chr6"
                 android:layout_row="4"
                 android:layout_column="5"
                 android:layout_weight="0.14"

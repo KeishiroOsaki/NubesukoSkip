@@ -19,7 +19,10 @@
             android:layout_below="@+id/gridLayout"
             android:layout_alignRight="@+id/gridLayout"
             android:layout_alignEnd="@+id/gridLayout"
-            android:gravity="center_horizontal" />
+            android:gravity="center_horizontal"
+            android:textAlignment="center"
+            android:textSize="10pt"
+            android:textStyle="bold" />
 
         <GridLayout
             android:layout_width="wrap_content"

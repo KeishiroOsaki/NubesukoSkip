@@ -10,15 +10,18 @@ import android.view.MenuItem;
 
 public class GameActivity extends ActionBarActivity {
 
+    int imgSrcNum;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game2);
 
         Intent i = getIntent();
-        String keyword = i.getStringExtra("src");
+        imgSrcNum = Integer.parseInt(i.getStringExtra("src"));
 
-        Log.i("src",keyword);
+        Log.d("src",Integer.toString(imgSrcNum));
+
     }
 
     @Override

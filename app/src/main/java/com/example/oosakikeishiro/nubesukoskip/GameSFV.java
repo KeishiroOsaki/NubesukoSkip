@@ -1,6 +1,7 @@
 package com.example.oosakikeishiro.nubesukoskip;
 
 import android.content.Context;
+import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -13,8 +14,9 @@ public class GameSFV extends SurfaceView implements Runnable, SurfaceHolder.Call
     Thread thread;
     int screen_width, screen_height;
 
-    public GameSFV(Context context) {
-        super(context);
+    public GameSFV(Context context , AttributeSet attrs) {
+        super(context , attrs);
+        setFocusable(true);
         surfaceHolder = getHolder();
         surfaceHolder.addCallback(this);
     }

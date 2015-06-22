@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Handler;
@@ -15,7 +14,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.util.Timer;
-import java.util.TimerTask;
 
 
 /**
@@ -57,7 +55,7 @@ public class GameSFV extends SurfaceView implements Runnable, SurfaceHolder.Call
     private Rect src[], dst[][];
     private Bitmap[] obImg;
 
-    posiUpTask timerTask = null;
+    // posiUpTask timerTask = null;
     Timer mTimer = null;
     Handler mHandler = new Handler();
 
@@ -97,9 +95,9 @@ public class GameSFV extends SurfaceView implements Runnable, SurfaceHolder.Call
 
 
     @Override
-    public void run() {
+    public void run() {  //ivalごとに行う処理
 
-        while (/*mLooper != null*/ /*isAttached*/ true) {
+        //while (/*mLooper != null*/ /*isAttached*/ true) {
 
             Log.d("チェックポイント", "while直下");
 
@@ -185,7 +183,77 @@ public class GameSFV extends SurfaceView implements Runnable, SurfaceHolder.Call
             }*/
 
 
+        // }
+
+        //次の描画位置
+
+        //上のmapを下にコピー
+        for (int r = 5; r > 0; r--) {
+            for (int c = 0; c < 5; c++) {
+                map[r][c] = map[r - 1][c];
+            }
         }
+        Log.d("チェックポイント", "map転写完了");
+
+
+        //最上段に新規アサイン
+        map[0][(int) (Math.random() * 5)] = 1;
+        map[0][(int) (Math.random() * 5)] = 2;
+        if (Math.random() * 100 > 95) {
+            map[0][(int) (Math.random() * 5)] = 3;
+        }
+
+        if (Math.random() * 100 > 70) {
+            map[0][(int) (Math.random() * 5)] = 4;
+        }
+
+        if (muteki > 0) {
+            muteki--;
+        }
+
+        Log.d("チェックポイント", "上段障害物生成完了");
+
+        //当たり判定
+        if (muteki == 0) {
+
+
+            switch (map[uPosiY][uPosiX]) {
+                case 1: //障害物と衝突
+                    die();
+                    break;
+
+                case 2: //上矢印と衝突
+                    if (uPosiY <= 1) {
+                        uPosiY--;
+                    } else {
+                        die();
+                    }
+                    break;
+
+                case 3: //星と衝突
+                    addscore++;
+                    break;
+
+                case 4: //下矢印と衝突
+                    if (uPosiY <= 4) {
+                        uPosiY++;
+                    } else {
+                        die();
+                    }
+
+                    break;
+
+
+            }
+        }
+        Log.d("チェックポイント", "当たり判定終了");
+
+
+        doDraw(surfaceHolder);
+
+
+        mHandler.removeCallbacks(this);
+        mHandler.postDelayed(this, ival);
 
 
     }
@@ -203,7 +271,7 @@ public class GameSFV extends SurfaceView implements Runnable, SurfaceHolder.Call
         Canvas cvs = holder.lockCanvas();
         Paint paint = new Paint();
 
-        cvs.drawColor(Color.WHITE);
+        cvs.drawRGB(255, 255, 255);
 
         blockWidth = screen_width / 5;
 
@@ -252,20 +320,23 @@ public class GameSFV extends SurfaceView implements Runnable, SurfaceHolder.Call
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         surfaceHolder = holder;
-        timerTask = new posiUpTask();
-        mTimer = new Timer(true);
-        mLooper = new Thread(this);
+       /* timerTask = new posiUpTask();
+        mTimer = new Timer(true);*/
+        // mLooper = new Thread(this);
         isAttached = true;
 
+
         doDraw(holder);
-        mTimer.schedule(timerTask, 0, 300);
-        mLooper.start();
+
+        mHandler.postDelayed(this, ival);
+        // mTimer.schedule(timerTask, 0, 300);
+        //  mLooper.start();
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
 
-        mTimer.cancel();
+        //  mTimer.cancel();
         //
         isAttached = false;
 
@@ -276,6 +347,8 @@ public class GameSFV extends SurfaceView implements Runnable, SurfaceHolder.Call
 
     }
 
+
+    /*
     class posiUpTask extends TimerTask {
 
         @Override
@@ -347,6 +420,8 @@ public class GameSFV extends SurfaceView implements Runnable, SurfaceHolder.Call
             //doDraw(surfaceHolder);
         }
     }
+
+    */
 }
 
 

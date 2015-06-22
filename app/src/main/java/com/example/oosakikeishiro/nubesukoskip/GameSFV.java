@@ -29,7 +29,9 @@ public class GameSFV /*extends SurfaceView */ implements Runnable, SurfaceHolder
 
     Context context;
     private Bitmap star, arrowUp, arrowDown, hoge;
-    private Bitmap[] player = new Bitmap[8];
+    // private Bitmap[] player = new Bitmap[8];
+    private Bitmap player;
+    private int player_no;
     private Boolean gameState = true;
     private int turns = 0;
     private int addscore = 0;
@@ -76,13 +78,36 @@ public class GameSFV /*extends SurfaceView */ implements Runnable, SurfaceHolder
         hoge = BitmapFactory.decodeResource(res, R.drawable.hoge);
         arrowUp = BitmapFactory.decodeResource(res, R.drawable.arrow_up);
         arrowDown = BitmapFactory.decodeResource(res, R.drawable.arrow_down);
+        /*
         player[1] = BitmapFactory.decodeResource(res, R.drawable.player01);
         player[2] = BitmapFactory.decodeResource(res, R.drawable.player02);
         player[4] = BitmapFactory.decodeResource(res, R.drawable.player04);
         player[5] = BitmapFactory.decodeResource(res, R.drawable.player05);
         player[7] = BitmapFactory.decodeResource(res, R.drawable.player07);
         player[6] = BitmapFactory.decodeResource(res, R.drawable.player06);
+        */
         obImg = new Bitmap[]{null, hoge, arrowUp, star, arrowDown};
+
+        switch (player_no) {
+            case 1:
+                player = BitmapFactory.decodeResource(res, R.drawable.player01);
+                break;
+            case 2:
+                player = BitmapFactory.decodeResource(res, R.drawable.player02);
+                break;
+            case 3:
+                player = BitmapFactory.decodeResource(res, R.drawable.player04);
+                break;
+            case 5:
+                player = BitmapFactory.decodeResource(res, R.drawable.player05);
+                break;
+            case 6:
+                player = BitmapFactory.decodeResource(res, R.drawable.player06);
+                break;
+            case 7:
+                player = BitmapFactory.decodeResource(res, R.drawable.player07);
+                break;
+        }
 
         Log.d("Notice", "読み込み完了");
         //

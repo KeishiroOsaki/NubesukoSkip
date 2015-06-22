@@ -7,13 +7,6 @@
     tools:context="com.example.oosakikeishiro.nubesukoskip.GameActivity"
     android:padding="0dp">
 
-    <com.example.oosakikeishiro.nubesukoskip.GameSFV
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/View01"
-        android:background="#ffffffff"
-        android:layout_above="@+id/button" />
-
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -38,11 +31,28 @@
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/score"
         android:id="@+id/textView3"
-        android:layout_below="@+id/View01"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_alignTop="@+id/button" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/button"
+        android:id="@+id/viewfw">
+
+        <!--
+                <SurfaceView
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/View01"
+                    android:background="#ffffffff"
+                    android:layout_above="@+id/button"
+                    android:focusable="true" />-->
+
+    </FrameLayout>
 
 </RelativeLayout>

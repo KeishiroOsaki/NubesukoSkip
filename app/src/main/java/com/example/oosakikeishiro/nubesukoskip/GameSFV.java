@@ -5,10 +5,10 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Handler;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -19,14 +19,15 @@ import java.util.Timer;
 /**
  * Created by oosakikeishiro on 15/06/19.
  */
-public class GameSFV extends SurfaceView implements Runnable, SurfaceHolder.Callback {
+public class GameSFV /*extends SurfaceView */ implements Runnable, SurfaceHolder.Callback {
 
     SurfaceHolder surfaceHolder;
     int screen_width, screen_height;
     private long mTime = 0;          //一つ前の描画時刻
 
-    private Resources res = this.getContext().getResources();
+    private Resources res;
 
+    Context context;
     private Bitmap star, arrowUp, arrowDown, hoge;
     private Bitmap[] player = new Bitmap[8];
     private Boolean gameState = true;
@@ -60,12 +61,15 @@ public class GameSFV extends SurfaceView implements Runnable, SurfaceHolder.Call
     Handler mHandler = new Handler();
 
 
-    public GameSFV(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        setFocusable(true);
-        surfaceHolder = getHolder();
-        getHolder().addCallback(this);
+    public GameSFV(Context context, SurfaceView surfaceView) {
+        //super(context);
 
+        this.context = context;
+        //setFocusable(true);
+        surfaceHolder = surfaceView.getHolder();
+        surfaceHolder.addCallback(this);
+
+        res = context.getResources();
         //ここから拡張実装
         //まずは画像読み込み
         star = BitmapFactory.decodeResource(res, R.drawable.fav);
@@ -102,7 +106,7 @@ public class GameSFV extends SurfaceView implements Runnable, SurfaceHolder.Call
             Log.d("チェックポイント", "while直下");
 
             //描画処理
-            doDraw(getHolder());
+        doDraw();
 
             //位置更新処理
 
@@ -249,10 +253,10 @@ public class GameSFV extends SurfaceView implements Runnable, SurfaceHolder.Call
         Log.d("チェックポイント", "当たり判定終了");
 
 
-        doDraw(surfaceHolder);
+        doDraw();
 
 
-        mHandler.removeCallbacks(this);
+
         mHandler.postDelayed(this, ival);
 
 
@@ -264,22 +268,17 @@ public class GameSFV extends SurfaceView implements Runnable, SurfaceHolder.Call
     }
 
     //描画関数
-    private void doDraw(SurfaceHolder holder) {
+    private void doDraw() {
 
         Log.d("チェックポイント", "doDraw先頭");
+        Log.d("使用SurfaceHolder", surfaceHolder.toString());
         //描画処理
-        Canvas cvs = holder.lockCanvas();
+        Canvas cvs = surfaceHolder.lockCanvas();
         Paint paint = new Paint();
 
-        cvs.drawRGB(255, 255, 255);
+        cvs.drawColor(Color.WHITE);
 
-        blockWidth = screen_width / 5;
 
-        for (int c = 0; c < 5; c++) {
-            for (int r = 0; r < 6; r++) {
-                dst[r][c] = new Rect(c * blockWidth, r * blockWidth, (c + 1) * blockWidth, (r + 1) * blockWidth);
-            }
-        }
 
         for (int r = 0; r < 6; r++) {
             for (int c = 0; c < 5; c++) {
@@ -307,7 +306,7 @@ public class GameSFV extends SurfaceView implements Runnable, SurfaceHolder.Call
 
 
         Log.d("チェックポイント", "描画完了");
-        holder.unlockCanvasAndPost(cvs);
+        surfaceHolder.unlockCanvasAndPost(cvs);
     }
 
     @Override
@@ -315,6 +314,14 @@ public class GameSFV extends SurfaceView implements Runnable, SurfaceHolder.Call
         screen_width = width;
         screen_height = height;
 
+
+        blockWidth = screen_width / 5;
+
+        for (int c = 0; c < 5; c++) {
+            for (int r = 0; r < 6; r++) {
+                dst[r][c] = new Rect(c * blockWidth, r * blockWidth, (c + 1) * blockWidth, (r + 1) * blockWidth);
+            }
+        }
     }
 
     @Override
@@ -326,11 +333,12 @@ public class GameSFV extends SurfaceView implements Runnable, SurfaceHolder.Call
         isAttached = true;
 
 
-        doDraw(holder);
+        doDraw();
 
         mHandler.postDelayed(this, ival);
         // mTimer.schedule(timerTask, 0, 300);
         //  mLooper.start();
+
     }
 
     @Override
@@ -345,6 +353,7 @@ public class GameSFV extends SurfaceView implements Runnable, SurfaceHolder.Call
 
         //mLooper = null;
 
+        mHandler.removeCallbacks(this);
     }
 
 

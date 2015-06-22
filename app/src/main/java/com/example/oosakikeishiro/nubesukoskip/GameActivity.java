@@ -1,21 +1,42 @@
 package com.example.oosakikeishiro.nubesukoskip;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SurfaceView;
+import android.view.View;
+import android.widget.FrameLayout;
 
 
 public class GameActivity extends ActionBarActivity {
 
     int imgSrcNum;
+    SurfaceView sview;
+    GameSFV gSFV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game2);
+
+        FrameLayout viewfw = (FrameLayout) findViewById(R.id.viewfw);
+        //GameSFV view = (GameSFV) getLayoutInflater().inflate(R.layout.gsfv, null);
+        // GameSFV gsfv = new GameSFV(getApplicationContext(),)
+
+        //viewfw.addView(view);
+
+        sview = (SurfaceView) new SurfaceView(this.getApplicationContext());
+        gSFV = new GameSFV(this, sview);
+
+        sview.setFocusable(true);
+        sview.setBackgroundColor(Color.WHITE);
+        sview.setVisibility(View.VISIBLE);
+
+        viewfw.addView((SurfaceView) sview);
 
         Intent i = getIntent();
         imgSrcNum = Integer.parseInt(i.getStringExtra("src"));

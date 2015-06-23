@@ -21,6 +21,9 @@ import java.util.Timer;
  */
 public class GameSFV /*extends SurfaceView */ implements Runnable, SurfaceHolder.Callback {
 
+    private Rect mutekisrc;
+    private Rect mutekidest;
+    private Bitmap mutekip;
     SurfaceHolder surfaceHolder;
     int screen_width, screen_height;
     private long mTime = 0;          //一つ前の描画時刻
@@ -32,9 +35,12 @@ public class GameSFV /*extends SurfaceView */ implements Runnable, SurfaceHolder
     // private Bitmap[] player = new Bitmap[8];
     private Bitmap player;
     private int player_no;
+    private Bitmap death_credit;
+
     private Boolean gameState = true;
     private int turns = 0;
-    private int addscore = 0;
+    private int vscore = 0;
+    private int bscore = 0;
 
     private Thread mLooper;
 
@@ -58,6 +64,8 @@ public class GameSFV /*extends SurfaceView */ implements Runnable, SurfaceHolder
     private Rect src[], dst[][];
     private Bitmap[] obImg;
     private Rect psrc;
+    private Rect deathsrc;
+    private Rect deathdst;
 
     // posiUpTask timerTask = null;
     Timer mTimer = null;
@@ -99,7 +107,7 @@ public class GameSFV /*extends SurfaceView */ implements Runnable, SurfaceHolder
             case 2:
                 player = BitmapFactory.decodeResource(res, R.drawable.player02);
                 break;
-            case 3:
+            case 4:
                 player = BitmapFactory.decodeResource(res, R.drawable.player04);
                 break;
             case 5:
@@ -113,6 +121,8 @@ public class GameSFV /*extends SurfaceView */ implements Runnable, SurfaceHolder
                 break;
         }
 
+        mutekip = BitmapFactory.decodeResource(res, R.drawable.player03);
+        death_credit = BitmapFactory.decodeResource(res, R.drawable.shi);
         Log.d("Notice", "読み込み完了");
         //
 
@@ -124,6 +134,8 @@ public class GameSFV /*extends SurfaceView */ implements Runnable, SurfaceHolder
         dst = new Rect[6][5];
 
         psrc = new Rect(0, 0, player.getWidth(), player.getHeight());
+        mutekisrc = new Rect(0, 0, mutekip.getWidth(), mutekip.getHeight());
+        deathsrc = new Rect(0, 0, death_credit.getWidth(), death_credit.getHeight());
 
 
     }
@@ -145,11 +157,15 @@ public class GameSFV /*extends SurfaceView */ implements Runnable, SurfaceHolder
 
     private void die() {
         Log.d("チェックポイント", "突然の死");
+        pHandler.removeCallbacks(ru);
+        pHandler = null;
+        // mHandler.removeCallbacks(this);
         gameState = false;
     }
 
     //描画関数
     private void doDraw() {
+
 
         Log.d("チェックポイント", "doDraw先頭");
         Log.d("使用SurfaceHolder", surfaceHolder.toString());
@@ -163,18 +179,25 @@ public class GameSFV /*extends SurfaceView */ implements Runnable, SurfaceHolder
 
         paintf.setColor(Color.WHITE);
         paintf.setStyle(Paint.Style.FILL);
-
-        for (int r = 0; r < 6; r++) {
-            for (int c = 0; c < 5; c++) {
-                if (map[r][c] != 0) {
-                    cvs.drawBitmap(obImg[map[r][c]], src[map[r][c]], dst[r][c], paint);
-                } else {
-                    cvs.drawRect(dst[r][c], paintf);
+        if (gameState) {
+            for (int r = 0; r < 6; r++) {
+                for (int c = 0; c < 5; c++) {
+                    if (map[r][c] != 0) {
+                        cvs.drawBitmap(obImg[map[r][c]], src[map[r][c]], dst[r][c], paint);
+                    } else {
+                        cvs.drawRect(dst[r][c], paintf);
+                    }
                 }
             }
-        }
 
-        cvs.drawBitmap(player, psrc, dst[uPosiY][uPosiX], paint);
+            if (muteki == 0) {
+                cvs.drawBitmap(player, psrc, dst[uPosiY][uPosiX], paint);
+            } else {
+                cvs.drawBitmap(mutekip, mutekisrc, mutekidest, paint);
+            }
+        } else {
+            cvs.drawBitmap(death_credit, deathsrc, deathdst, paint);
+        }
 
 
         Log.d("チェックポイント", "描画完了");
@@ -194,6 +217,12 @@ public class GameSFV /*extends SurfaceView */ implements Runnable, SurfaceHolder
                 dst[r][c] = new Rect(c * blockWidth, r * blockWidth, (c + 1) * blockWidth, (r + 1) * blockWidth);
             }
         }
+        mutekidest = new Rect(0, screen_height - screen_width, screen_width, screen_height);
+        double death_mrate = screen_width / death_credit.getWidth();
+        deathdst = new Rect(0, (int) ((screen_height / 2) - (death_credit.getHeight() * death_mrate)),
+                screen_width, (int) ((screen_height / 2) + (death_credit.getHeight() * death_mrate)));
+
+        deathdst = new Rect(0, 200, screen_width, 800);
     }
 
     @Override
@@ -219,23 +248,26 @@ public class GameSFV /*extends SurfaceView */ implements Runnable, SurfaceHolder
 
                         case 2: //上矢印と衝突
                             if (uPosiY >= 1) {
-                                uPosiY--;
+
                                 Log.d("接触", "上と");
                                 map[uPosiY][uPosiX] = 0;
+                                uPosiY--;
                             } else {
                                 //die();
                             }
                             break;
 
                         case 3: //星と衝突
-                            addscore++;
+                            vscore++;
+                            muteki = 9;
                             map[uPosiY][uPosiX] = 0;
                             break;
 
                         case 4: //下矢印と衝突
                             if (uPosiY <= 4) {
-                                uPosiY++;
+
                                 map[uPosiY][uPosiX] = 0;
+                                uPosiY++;
                             } else {
                                 //die();
                             }
@@ -244,7 +276,11 @@ public class GameSFV /*extends SurfaceView */ implements Runnable, SurfaceHolder
 
 
                     }
+                } else {
+                    muteki--;
                 }
+
+                bscore++;
                 Log.d("チェックポイント", "当たり判定終了");
 
                 //上のmapを下にコピー
@@ -278,13 +314,17 @@ public class GameSFV /*extends SurfaceView */ implements Runnable, SurfaceHolder
                 Log.d("チェックポイント", "上段障害物生成完了");
 
                 doDraw();
-                pHandler.postDelayed(this, ival);
+                if (gameState) {
+                    pHandler.postDelayed(this, ival);
+                }
             }
         };
 
         // mHandler.post(this);
         // doDraw();
-        pHandler.postDelayed(ru, ival);
+        if (gameState) {
+            pHandler.postDelayed(ru, ival);
+        }
     }
 
     @Override
@@ -298,7 +338,9 @@ public class GameSFV /*extends SurfaceView */ implements Runnable, SurfaceHolder
         // }
 
         //mLooper = null;
-        pHandler.removeCallbacks(ru);
+        if (gameState) {
+            pHandler.removeCallbacks(ru);
+        }
         mHandler.removeCallbacks(this);
     }
 
@@ -332,6 +374,11 @@ public class GameSFV /*extends SurfaceView */ implements Runnable, SurfaceHolder
         uPosiY++;
         Log.d("移動", "下");
         doDraw();
+    }
+
+    public int getnowscore() {
+        //TextView score_l = (TextView)
+        return bscore + vscore;
     }
 
 }

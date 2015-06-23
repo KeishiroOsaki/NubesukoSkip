@@ -10,38 +10,39 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/toLeft"
-        android:id="@+id/button"
+        android:text="@string/reload"
+        android:id="@+id/bt_reload"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/textView3"
-        android:layout_toStartOf="@+id/textView3" />
+        android:layout_toLeftOf="@+id/score_l"
+        android:layout_toStartOf="@+id/score_l"
+        android:enabled="false" />
 
     <Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/toRight"
-        android:id="@+id/button2"
+        android:text="@string/share"
+        android:id="@+id/bt_share"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_toRightOf="@+id/textView3"
-        android:layout_toEndOf="@+id/textView3" />
+        android:layout_toRightOf="@+id/score_l"
+        android:layout_toEndOf="@+id/score_l" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/score"
-        android:id="@+id/textView3"
+        android:id="@+id/score_l"
         android:layout_centerHorizontal="true"
-        android:layout_alignTop="@+id/button" />
+        android:layout_alignTop="@+id/bt_reload" />
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/button"
+        android:layout_above="@+id/bt_reload"
         android:id="@+id/viewfw">
 
         <!--

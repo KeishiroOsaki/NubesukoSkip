@@ -2,6 +2,7 @@ package com.example.oosakikeishiro.nubesukoskip;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -9,14 +10,32 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 
-public class GameActivity extends ActionBarActivity implements View.OnTouchListener {
+public class GameActivity extends ActionBarActivity implements View.OnTouchListener, View.OnClickListener {
 
     int imgSrcNum;
     SurfaceView sview;
     GameSFV gSFV;
+    Handler sHandler;
+
+    Runnable sr = new Runnable() {
+        @Override
+        public void run() {
+            scoreUpdate();
+            sHandler.post(this);
+        }
+
+        public void scoreUpdate() {
+            TextView score_l = (TextView) findViewById(R.id.score_l);
+            score_l.setText("SCORE:" + Integer.toString(gSFV.getnowscore()));
+        }
+    };
+
+    private Button bt_reload, bt_share;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +61,14 @@ public class GameActivity extends ActionBarActivity implements View.OnTouchListe
 
         viewfw.addView(sview);
 
-
+        sHandler = new Handler();
+        sHandler.post(sr);
         Log.d("src", Integer.toString(imgSrcNum));
+
+        bt_reload = (Button) findViewById(R.id.bt_reload);
+        bt_share = (Button) findViewById(R.id.bt_share);
+        bt_reload.setOnClickListener(this);
+        bt_share.setOnClickListener(this);
 
     }
 
@@ -52,6 +77,12 @@ public class GameActivity extends ActionBarActivity implements View.OnTouchListe
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_game, menu);
         return true;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sHandler.removeCallbacks(sr);
     }
 
     @Override
@@ -85,5 +116,38 @@ public class GameActivity extends ActionBarActivity implements View.OnTouchListe
         }
 
         return true;
+    }
+
+
+    public void reload() {
+        Intent intent = getIntent();
+        overridePendingTransition(0, 0);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        finish();
+
+        overridePendingTransition(0, 0);
+        startActivity(intent);
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.bt_reload:
+                reload();
+                break;
+            case R.id.bt_share:
+                try {
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_SEND);
+                    intent.setType("text/plain");
+                    intent.putExtra(Intent.EXTRA_TEXT, "あなたのスコアは" + Integer.toString(gSFV.getnowscore()) + "です。#nubesukoskip");
+                    startActivity(intent);
+                } catch (Exception e) {
+                    Log.d("share機能", "Error");
+                }
+                break;
+
+        }
     }
 }

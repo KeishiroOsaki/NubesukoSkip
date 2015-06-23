@@ -4,6 +4,6 @@
     android:layout_height="match_parent"
     android:id="@+id/View01"
     android:background="#ffffffff"
-    android:layout_above="@+id/button">
+    android:layout_above="@+id/bt_reload">
 
 </com.example.oosakikeishiro.nubesukoskip.GameSFV>

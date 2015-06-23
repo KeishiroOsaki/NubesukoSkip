@@ -1,18 +1,18 @@
 package com.example.oosakikeishiro.nubesukoskip;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.FrameLayout;
 
 
-public class GameActivity extends ActionBarActivity {
+public class GameActivity extends ActionBarActivity implements View.OnTouchListener {
 
     int imgSrcNum;
     SurfaceView sview;
@@ -23,6 +23,9 @@ public class GameActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game2);
 
+        Intent i = getIntent();
+        imgSrcNum = Integer.parseInt(i.getStringExtra("src"));
+
         FrameLayout viewfw = (FrameLayout) findViewById(R.id.viewfw);
         //GameSFV view = (GameSFV) getLayoutInflater().inflate(R.layout.gsfv, null);
         // GameSFV gsfv = new GameSFV(getApplicationContext(),)
@@ -30,18 +33,17 @@ public class GameActivity extends ActionBarActivity {
         //viewfw.addView(view);
 
         sview = (SurfaceView) new SurfaceView(this.getApplicationContext());
-        gSFV = new GameSFV(this, sview);
+        gSFV = new GameSFV(this, sview, imgSrcNum);
 
         sview.setFocusable(true);
-        sview.setBackgroundColor(Color.WHITE);
+        // sview.setBackgroundColor(Color.WHITE);
         sview.setVisibility(View.VISIBLE);
+        sview.setOnTouchListener(this);
 
-        viewfw.addView((SurfaceView) sview);
+        viewfw.addView(sview);
 
-        Intent i = getIntent();
-        imgSrcNum = Integer.parseInt(i.getStringExtra("src"));
 
-        Log.d("src",Integer.toString(imgSrcNum));
+        Log.d("src", Integer.toString(imgSrcNum));
 
     }
 
@@ -65,5 +67,23 @@ public class GameActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        // switch (v.getId()) {
+        //   case R.id.viewfw:
+        Log.d("touchX", String.valueOf(event.getX()));
+        //        break;
+        //  }
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            if (gSFV.screen_width / 2 > event.getX()) {
+                gSFV.player2left();
+            } else {
+                gSFV.player2right();
+            }
+        }
+
+        return true;
     }
 }

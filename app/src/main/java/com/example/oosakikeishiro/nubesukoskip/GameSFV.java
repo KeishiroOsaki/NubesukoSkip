@@ -57,16 +57,20 @@ public class GameSFV /*extends SurfaceView */ implements Runnable, SurfaceHolder
 
     private Rect src[], dst[][];
     private Bitmap[] obImg;
+    private Rect psrc;
 
     // posiUpTask timerTask = null;
     Timer mTimer = null;
     Handler mHandler = new Handler();
+    Handler pHandler = new Handler();
+    Runnable ru;
 
 
-    public GameSFV(Context context, SurfaceView surfaceView) {
+    public GameSFV(Context context, SurfaceView surfaceView, int playerNumber) {
         //super(context);
 
         this.context = context;
+        this.player_no = playerNumber;
         //setFocusable(true);
         surfaceHolder = surfaceView.getHolder();
         surfaceHolder.addCallback(this);
@@ -119,171 +123,23 @@ public class GameSFV /*extends SurfaceView */ implements Runnable, SurfaceHolder
         src[4] = new Rect(0, 0, arrowDown.getWidth(), arrowDown.getHeight());
         dst = new Rect[6][5];
 
+        psrc = new Rect(0, 0, player.getWidth(), player.getHeight());
+
 
     }
 
 
     @Override
-    public void run() {  //ivalごとに行う処理
-
-        //while (/*mLooper != null*/ /*isAttached*/ true) {
-
-            Log.d("チェックポイント", "while直下");
-
-            //描画処理
-        doDraw();
-
-            //位置更新処理
-
-          /*
-            //処理落ちによるスローモーションをさけるため現在時刻を取得
-            long delta = System.currentTimeMillis() - mTime;
-            Log.d("mtime", Long.toString(mTime));
-            Log.d("delta", Long.toString(delta));
-            if (delta >= ival) {
-
-                mTime = System.currentTimeMillis();
+    public void run() {  //常時行う処理
 
 
-                //次の描画位置
+        Log.d("チェックポイント", "while直下");
 
-                //上のmapを下にコピー
-                for (int r = 5; r > 0; r--) {
-                    for (int c = 0; c < 5; c++) {
-                        map[r][c] = map[r - 1][c];
-                    }
-                }
-                Log.d("チェックポイント", "map転写完了");
-
-
-                //最上段に新規アサイン
-                map[0][(int) (Math.random() * 5)] = 1;
-                map[0][(int) (Math.random() * 5)] = 2;
-                if (Math.random() * 100 > 95) {
-                    map[0][(int) (Math.random() * 5)] = 3;
-                }
-
-                if (Math.random() * 100 > 70) {
-                    map[0][(int) (Math.random() * 5)] = 4;
-                }
-
-                if (muteki > 0) {
-                    muteki--;
-                }
-
-                Log.d("チェックポイント", "上段障害物生成完了");
-
-                //当たり判定
-                if (muteki == 0) {
-
-
-                    switch (map[uPosiY][uPosiX]) {
-                        case 1: //障害物と衝突
-                            die();
-                            break;
-
-                        case 2: //上矢印と衝突
-                            if (uPosiY <= 1) {
-                                uPosiY--;
-                            } else {
-                                die();
-                            }
-                            break;
-
-                        case 3: //星と衝突
-
-                            break;
-
-                        case 4: //下矢印と衝突
-                            if (uPosiY <= 4) {
-                                uPosiY++;
-                            } else {
-                                die();
-                            }
-
-                            break;
-
-
-                    }
-                }
-                Log.d("チェックポイント", "当たり判定終了");
-
-                //doDraw();
-            }*/
-
-
-        // }
-
-        //次の描画位置
-
-        //上のmapを下にコピー
-        for (int r = 5; r > 0; r--) {
-            for (int c = 0; c < 5; c++) {
-                map[r][c] = map[r - 1][c];
-            }
-        }
-        Log.d("チェックポイント", "map転写完了");
-
-
-        //最上段に新規アサイン
-        map[0][(int) (Math.random() * 5)] = 1;
-        map[0][(int) (Math.random() * 5)] = 2;
-        if (Math.random() * 100 > 95) {
-            map[0][(int) (Math.random() * 5)] = 3;
-        }
-
-        if (Math.random() * 100 > 70) {
-            map[0][(int) (Math.random() * 5)] = 4;
-        }
-
-        if (muteki > 0) {
-            muteki--;
-        }
-
-        Log.d("チェックポイント", "上段障害物生成完了");
-
-        //当たり判定
-        if (muteki == 0) {
-
-
-            switch (map[uPosiY][uPosiX]) {
-                case 1: //障害物と衝突
-                    die();
-                    break;
-
-                case 2: //上矢印と衝突
-                    if (uPosiY <= 1) {
-                        uPosiY--;
-                    } else {
-                        die();
-                    }
-                    break;
-
-                case 3: //星と衝突
-                    addscore++;
-                    break;
-
-                case 4: //下矢印と衝突
-                    if (uPosiY <= 4) {
-                        uPosiY++;
-                    } else {
-                        die();
-                    }
-
-                    break;
-
-
-            }
-        }
-        Log.d("チェックポイント", "当たり判定終了");
-
-
+        //描画処理
         doDraw();
 
 
-
-        mHandler.postDelayed(this, ival);
-
+        mHandler.post(this);
 
     }
 
@@ -299,35 +155,26 @@ public class GameSFV /*extends SurfaceView */ implements Runnable, SurfaceHolder
         Log.d("使用SurfaceHolder", surfaceHolder.toString());
         //描画処理
         Canvas cvs = surfaceHolder.lockCanvas();
+
         Paint paint = new Paint();
+        Paint paintf = new Paint();
 
         cvs.drawColor(Color.WHITE);
 
-
+        paintf.setColor(Color.WHITE);
+        paintf.setStyle(Paint.Style.FILL);
 
         for (int r = 0; r < 6; r++) {
             for (int c = 0; c < 5; c++) {
-                /*
-                switch (map[r][c]) {
-                    case 1:
-                        cvs.drawBitmap(hoge, src[], r * blockWidth, paint);
-                        break;
-                    case 2:
-                        cvs.drawBitmap(arrowUp, c * blockWidth, r * blockWidth, paint);
-                        break;
-                    case 3:
-                        cvs.drawBitmap(star, c * blockWidth, r * blockWidth, paint);
-                        break;
-                    case 4:
-                        cvs.drawBitmap(arrowDown, c * blockWidth, r * blockWidth, paint);
-                        break;
-                }
-                */
                 if (map[r][c] != 0) {
                     cvs.drawBitmap(obImg[map[r][c]], src[map[r][c]], dst[r][c], paint);
+                } else {
+                    cvs.drawRect(dst[r][c], paintf);
                 }
             }
         }
+
+        cvs.drawBitmap(player, psrc, dst[uPosiY][uPosiX], paint);
 
 
         Log.d("チェックポイント", "描画完了");
@@ -352,18 +199,92 @@ public class GameSFV /*extends SurfaceView */ implements Runnable, SurfaceHolder
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         surfaceHolder = holder;
-       /* timerTask = new posiUpTask();
-        mTimer = new Timer(true);*/
-        // mLooper = new Thread(this);
         isAttached = true;
 
 
-        doDraw();
+        ru = new Runnable() {  //ivalごとに行う位置更新等の処理
+            @Override
+            public void run() {
+                //次の描画位置
 
-        mHandler.postDelayed(this, ival);
-        // mTimer.schedule(timerTask, 0, 300);
-        //  mLooper.start();
 
+                //当たり判定
+                if (muteki == 0) {
+                    Log.d("状況", "無敵じゃないよ");
+
+                    switch (map[uPosiY][uPosiX]) {
+                        case 1: //障害物と衝突
+                            die();
+                            break;
+
+                        case 2: //上矢印と衝突
+                            if (uPosiY >= 1) {
+                                uPosiY--;
+                                Log.d("接触", "上と");
+                                map[uPosiY][uPosiX] = 0;
+                            } else {
+                                //die();
+                            }
+                            break;
+
+                        case 3: //星と衝突
+                            addscore++;
+                            map[uPosiY][uPosiX] = 0;
+                            break;
+
+                        case 4: //下矢印と衝突
+                            if (uPosiY <= 4) {
+                                uPosiY++;
+                                map[uPosiY][uPosiX] = 0;
+                            } else {
+                                //die();
+                            }
+
+                            break;
+
+
+                    }
+                }
+                Log.d("チェックポイント", "当たり判定終了");
+
+                //上のmapを下にコピー
+                for (int r = 5; r > 0; r--) {
+                    for (int c = 0; c < 5; c++) {
+                        map[r][c] = map[r - 1][c];
+                    }
+                }
+                Log.d("チェックポイント", "map転写完了");
+
+
+                //最上段に新規アサイン
+                for (int c = 0; c < 5; c++) {
+                    map[0][c] = 0;
+                }
+
+                map[0][(int) (Math.random() * 5)] = 1;
+                map[0][(int) (Math.random() * 5)] = 2;
+                if (Math.random() * 100 > 95) {
+                    map[0][(int) (Math.random() * 5)] = 3;
+                }
+
+                if (Math.random() * 100 > 70) {
+                    map[0][(int) (Math.random() * 5)] = 4;
+                }
+
+                if (muteki > 0) {
+                    muteki--;
+                }
+
+                Log.d("チェックポイント", "上段障害物生成完了");
+
+                doDraw();
+                pHandler.postDelayed(this, ival);
+            }
+        };
+
+        // mHandler.post(this);
+        // doDraw();
+        pHandler.postDelayed(ru, ival);
     }
 
     @Override
@@ -377,85 +298,42 @@ public class GameSFV /*extends SurfaceView */ implements Runnable, SurfaceHolder
         // }
 
         //mLooper = null;
-
+        pHandler.removeCallbacks(ru);
         mHandler.removeCallbacks(this);
     }
 
-
-    /*
-    class posiUpTask extends TimerTask {
-
-        @Override
-        public void run() {
-            //次の描画位置
-
-            //上のmapを下にコピー
-            for (int r = 5; r > 0; r--) {
-                for (int c = 0; c < 5; c++) {
-                    map[r][c] = map[r - 1][c];
-                }
-            }
-            Log.d("チェックポイント", "map転写完了");
-
-
-            //最上段に新規アサイン
-            map[0][(int) (Math.random() * 5)] = 1;
-            map[0][(int) (Math.random() * 5)] = 2;
-            if (Math.random() * 100 > 95) {
-                map[0][(int) (Math.random() * 5)] = 3;
-            }
-
-            if (Math.random() * 100 > 70) {
-                map[0][(int) (Math.random() * 5)] = 4;
-            }
-
-            if (muteki > 0) {
-                muteki--;
-            }
-
-            Log.d("チェックポイント", "上段障害物生成完了");
-
-            //当たり判定
-            if (muteki == 0) {
-
-
-                switch (map[uPosiY][uPosiX]) {
-                    case 1: //障害物と衝突
-                        die();
-                        break;
-
-                    case 2: //上矢印と衝突
-                        if (uPosiY <= 1) {
-                            uPosiY--;
-                        } else {
-                            die();
-                        }
-                        break;
-
-                    case 3: //星と衝突
-                        addscore++;
-                        break;
-
-                    case 4: //下矢印と衝突
-                        if (uPosiY <= 4) {
-                            uPosiY++;
-                        } else {
-                            die();
-                        }
-
-                        break;
-
-
-                }
-            }
-            Log.d("チェックポイント", "当たり判定終了");
-
-
-            //doDraw(surfaceHolder);
+    //左移動メソッド
+    public void player2left() {
+        if (uPosiX != 0) {
+            uPosiX--;
+            Log.d("移動", "左");
+            doDraw();
         }
     }
 
-    */
+    //右移動メソッド
+    public void player2right() {
+        if (uPosiX != 4) {
+            uPosiX++;
+            Log.d("移動", "右");
+            doDraw();
+        }
+    }
+
+    //上移動メソッド
+    public void player2up() {
+        uPosiY--;
+        Log.d("移動", "上");
+        doDraw();
+    }
+
+    //下移動メソッド
+    public void player2down() {
+        uPosiY++;
+        Log.d("移動", "下");
+        doDraw();
+    }
+
 }
 
 
